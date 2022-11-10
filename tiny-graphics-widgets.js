@@ -3,7 +3,7 @@
  * This file defines a lot of panels that can be placed on websites to create interactive graphics programs that use tiny-graphics.js.
  */
 
-import {tiny} from './tiny-graphics.js';
+import {tiny} from '../../../Documents/GitHub/CS174A-Proj/tiny-graphics.js';
 
 // Pull these names into this module's scope for convenience.
 const {color, Scene} = tiny;
@@ -246,7 +246,7 @@ const Code_Widget = widgets.Code_Widget =
             if (!main_scene)
                 return;
 
-            import( './main-scene.js' )
+            import( '../../../Documents/GitHub/CS174A-Proj/main-scene.js' )
                 .then(module => {
                     this.build_reader(element, main_scene, additional_scenes, module.defs);
                     if (!options.hide_navigator)
