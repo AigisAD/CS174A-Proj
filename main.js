@@ -10,6 +10,7 @@ const {
 export class Main extends Scene {
     constructor() {
         super();
+
         this.shapes={
             target: new defs.Subdivision_Sphere(4),
         };
@@ -68,6 +69,7 @@ export class Main extends Scene {
         let model_transform = Mat4.identity();
         this.draw_targets(context,program_state,t);
         //this.shapes.cube.draw(context, program_state, model_transform, this.materials.target.override({color: my_color}));
+
 
     }
 
