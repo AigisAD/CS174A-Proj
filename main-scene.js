@@ -1,49 +1,66 @@
-import {defs} from './examples/common.js';
+window.Term_Project_Scene = window.classes.Term_Project_Scene =
+    class Term_Project_Scene extends Scene_Component {
+        constructor(context, control_box)     // The scene begins by requesting the camera, shapes, and materials it will need.
+        {
+            super(context, control_box);    // First, include a secondary Scene that provides movement controls:
+            if (!context.globals.has_controls)
+                context.register_scene_component(new Camera_Movement(context, control_box.parentElement.insertCell()));
+                context.register_scene_component(new Aiming_Manager(context, control_box.parentElement.insertCell()));
+            context.globals.graphics_state.camera_transform = Mat4.look_at(Vec.of(0, 25, 0), Vec.of(0, 25, 20), Vec.of(0, 1, 0));
 
-// Now everything is loaded from tiny-graphics.js and its helper files. An object "tiny" wraps its contents, along
-// with "defs" for wrapping some additional utilities included in common.js.
+            // *** Mouse controls: ***
+            this.mouse = { "from_center": Vec.of( 0,0 ) };                           // Measure mouse steering, for rotating the flyaround camera:
+               const mouse_position = ( e, rect = context.canvas.getBoundingClientRect() ) => 
+                                            Vec.of( e.clientX - (rect.left + rect.right)/2, e.clientY - (rect.bottom + rect.top)/2 );
+                                                 // Set up mouse response.  The last one stops us from reacting if the mouse leaves the canvas.
 
-// ******************** Before selecting which demo we want to display, we have to load its code. If this page is hosted
-// on the internet, the demo's class can be injected right here by the server.
-//
-// In this case, it's not, so you'll instead Load demos from files in your directory and copy them into "defs."
+            const r = context.width / context.height;
+            context.globals.graphics_state.projection_transform = Mat4.perspective(Math.PI / 4, r, .1, 1000);
 
-const Minimal_Webgl_Demo = defs.Minimal_Webgl_Demo;
-import {Axes_Viewer, Axes_Viewer_Test_Scene, Matrix_Game}
-                    from "./examples/axes-viewer.js";
-import {Demonstration}
-                    from "./examples/demonstration.js";
-import {Inertia_Demo, Collision_Demo}
-                    from "./examples/collisions-demo.js";
-import {Many_Lights_Demo}
-                    from "./examples/many-lights-demo.js";
-import {Obj_File_Demo}
-                    from "./examples/obj-file-demo.js";
-import {Parametric_Surfaces}
-                    from "./examples/parametric-surfaces.js";
-import {Scene_To_Texture_Demo}
-                    from "./examples/scene-to-texture-demo.js";
-import {Text_Demo}
-                    from "./examples/text-demo.js";
-import {Transforms_Sandbox_Base, Transforms_Sandbox}
-                    from "./examples/transforms-sandbox.js";
+            const shapes = {
+                box: new Cube(),
+                axis: new Axis_Arrows(),
+            };
 
-Object.assign (defs,
-               {Minimal_Webgl_Demo},
-               {Axes_Viewer, Axes_Viewer_Test_Scene, Matrix_Game},
-               {Demonstration},
-               {Inertia_Demo, Collision_Demo},
-               {Many_Lights_Demo},
-               {Obj_File_Demo},
-               {Parametric_Surfaces},
-               {Scene_To_Texture_Demo},
-               {Text_Demo},
-               {Transforms_Sandbox_Base, Transforms_Sandbox}
-);
+            this.submit_shapes(context, shapes);
 
-// ******************** SELECT THE DEMO TO DISPLAY:
 
-const main_scene        = Parametric_Surfaces;
-const additional_scenes = [];
+            this.materials =
+                {
+                    phong: context.get_instance(Phong_Shader).material(Color.of(0.5, 0.5, 0.5, 1), {ambient: 1}),
+                    phong2: context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: 1,}),
+                };
+            this.lights = [new Light(Vec.of(-5, 5, 5, 1), Color.of(0, 1, 1, 1), 100000)];
 
-export {main_scene, additional_scenes, defs};
+        }
+
+        make_control_panel() {
+
+        }
+
+        display(graphics_state) {
+            graphics_state.lights = this.lights;        // Use the lights stored in this.lights.
+            const t = graphics_state.animation_time / 1000, dt = graphics_state.animation_delta_time / 1000;
+
+
+            // Drawing map
+            var base_map = Mat4.identity().times(Mat4.scale([200, 1, 200]))
+                .times(Mat4.translation([0, -5, 0]));
+            this.shapes.box.draw(graphics_state, base_map, this.materials.phong);
+
+            var wall_1 = Mat4.identity().times(Mat4.translation([0, 20, -200]))
+                .times(Mat4.scale([200, 25, 1]));
+            var wall_2 = Mat4.identity().times(Mat4.translation([0, 20, 200]))
+                .times(Mat4.scale([200, 25, 1]));
+            var wall_3 = Mat4.identity().times(Mat4.translation([200, 20, 0]))
+                .times(Mat4.scale([1, 25, 200]));
+            var wall_4 = Mat4.identity().times(Mat4.translation([-200, 20, 0]))
+                .times(Mat4.scale([1, 25, 200]));
+            this.shapes.box.draw(graphics_state, wall_1, this.materials.phong.override({color: Color.of([0.156, 0, 1, 1])}));
+            this.shapes.box.draw(graphics_state, wall_2, this.materials.phong.override({color: Color.of([0.156, 0, 1, 1])}));
+            this.shapes.box.draw(graphics_state, wall_3, this.materials.phong.override({color: Color.of([0.156, 0, 1, 1])}));
+            this.shapes.box.draw(graphics_state, wall_4, this.materials.phong.override({color: Color.of([0.156, 0, 1, 1])}));
+          
+
+        }
+    }
