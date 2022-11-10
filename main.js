@@ -8,6 +8,12 @@ export class Main extends Scene {
     constructor() {
         // constructor(): Scenes begin by populating initial values like the Shapes and Materials they'll need.
         super();
+        /*
+        chris is cute
+
+
+
+        */
 
     }
 }
