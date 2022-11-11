@@ -122,7 +122,7 @@ class Camera_Movement extends Scene_Component
             this.camVector = this.camVector.minus(lookVector);
 
             // HANDLE COLLISION TEMPORARILY HERE
-            const mapBound = 90;
+            const mapBound = 180;
             this.camVector[1] = -this.height;
             if (this.camVector[0] > mapBound)
                 this.camVector[0] = mapBound;

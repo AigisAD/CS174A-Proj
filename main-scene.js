@@ -20,6 +20,7 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
             const shapes = {
                 box: new Cube(),
                 axis: new Axis_Arrows(),
+                sphere: new Subdivision_Sphere(4),
             };
 
             this.submit_shapes(context, shapes);
@@ -29,6 +30,7 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
                 {
                     phong: context.get_instance(Phong_Shader).material(Color.of(0.5, 0.5, 0.5, 1), {ambient: 1}),
                     phong2: context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: 1,}),
+                    red: context.get_instance(Phong_Shader).material(Color.of(1, 0, 0, 1), {ambient:1}),
                 };
             this.lights = [new Light(Vec.of(-5, 5, 5, 1), Color.of(0, 1, 1, 1), 100000)];
 
@@ -56,10 +58,12 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
                 .times(Mat4.scale([1, 25, 200]));
             var wall_4 = Mat4.identity().times(Mat4.translation([-200, 20, 0]))
                 .times(Mat4.scale([1, 25, 200]));
+            var sphere = Mat4.identity().times(Mat4.translation([0, 10, 0])).times(Mat4.scale([10, 10, 10]));
             this.shapes.box.draw(graphics_state, wall_1, this.materials.phong.override({color: Color.of([0.156, 0, 1, 1])}));
             this.shapes.box.draw(graphics_state, wall_2, this.materials.phong.override({color: Color.of([0.156, 0, 1, 1])}));
             this.shapes.box.draw(graphics_state, wall_3, this.materials.phong.override({color: Color.of([0.156, 0, 1, 1])}));
             this.shapes.box.draw(graphics_state, wall_4, this.materials.phong.override({color: Color.of([0.156, 0, 1, 1])}));
+            this.shapes.sphere.draw(graphics_state, sphere, this.materials.red);
           
 
         }
