@@ -21,12 +21,13 @@ class Aiming_Manager extends Scene_Component
             this.canvas = context.canvas;
 
             const shapes = {
-                box: new Cube(),
+                gun: new Cube(),
                 bullet: new Subdivision_Sphere(4),
             }
             this.submit_shapes(context, shapes);
             this.materials = {
                 red: context.get_instance(Phong_Shader).material(Color.of(1, 0, 0, 1), {ambient: 1}),
+                phong: context.get_instance(Phong_Shader).material(Color.of(0.0, 0.0, 0.0, 1), {ambient: 0.0}),
             };
             this.bullet_size = 1;
             this.bullet_velocity = 500;
@@ -44,6 +45,16 @@ class Aiming_Manager extends Scene_Component
         
         make_control_panel() {
 
+        }
+        drawGun(graphics_state){
+            //let transform= Mat4.inverse(this.target());
+            let transform= Mat4.inverse(this.target())
+                .times(Mat4.scale([1,1,5]))
+                .times(Mat4.translation([5,-5,-2.8]));
+            //transform=
+                //.times(Mat4.scale(1,1,3))
+
+            this.shapes.gun.draw(graphics_state,transform,this.materials.phong);
         }
         shoot() {
             console.log("shoot");
@@ -76,6 +87,7 @@ class Aiming_Manager extends Scene_Component
 
         }
         display(graphics_state){
+            this.drawGun(graphics_state);
             for (let i = 0; i < this.live_bullets.length; i++){
                 this.shapes.bullet.draw(graphics_state, this.live_bullets[i].pos, this.materials.red);
                 this.updateBulletPos(graphics_state);
