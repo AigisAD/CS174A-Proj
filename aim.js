@@ -1,8 +1,9 @@
 class Bullet {
 
-    constructor(pos, dir){
+    constructor(pos, dir, time){
         this.pos = pos;
         this.dir = dir;
+        this.spawn_time = time
     }
 }
 window.Aiming_Manager = window.classes.Aiming_Manager = 
@@ -56,7 +57,7 @@ class Aiming_Manager extends Scene_Component
 
             this.shapes.gun.draw(graphics_state,transform,this.materials.phong);
         }
-        shoot() {
+        shoot(graphics_state) {
             console.log("shoot");
             const viewDirection = this.target()[2];
             //extract the 3-dimensional view vector
@@ -71,12 +72,16 @@ class Aiming_Manager extends Scene_Component
 
             //create the model_transform for the initial position of the new bullet and scale according to BULLET_SIZE
             let bulletTransform = Mat4.identity().times(translationMatrix).times(Mat4.scale([this.bullet_size, this.bullet_size, this.bullet_size]));
-            let bullet = new Bullet(bulletTransform, viewVector);
+            let bullet = new Bullet(bulletTransform, viewVector, this.context.globals.graphics_state.animation_time/1000);
             this.live_bullets.push(bullet);
 
         }
         updateBulletPos(graphics_state){
             this.live_bullets.map( (bullet) => {
+                if( graphics_state.animation_time/1000 - bullet.spawn_time > 1){
+                    this.live_bullets.shift();
+                    return;
+                }
                 let dt = graphics_state.animation_delta_time / 1000;
                 const bulletDisplacement= -dt * this.bullet_velocity;
                 //translate bullet based on elapsed time
