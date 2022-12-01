@@ -58,12 +58,20 @@ class LinkedList {
         return 0;
     }
 
+
+
 }
 function tuple3(x, y, z) { return { x: x, y: y, z: z } }
 class Target {
-    constructor(x,y,z,speed) {
+    constructor(x,y,z,speed,creation_time) {
         this.coordinates=tuple3(x,y,z);
         this.speed=speed;
+        this.creation_time=creation_time;
+    }
+    set(target){
+        this.coordinates=target.coordinates;
+        this.speed=target.speed;
+        this.creation_time=target.creation_time;
     }
 }
 window.Target_Manager = window.classes.Target_Manager =
@@ -89,14 +97,46 @@ window.Target_Manager = window.classes.Target_Manager =
                 target:  context.get_instance(Phong_Shader).material(Color.of(0.25, 1, 0.25, 1), {ambient: 1}),
 
             };
+
+
+            //================================================================ chris wang added start ==============================================
+            this.RoundScore = 0;
+            this.RoundActive = false;
+            this.RoundTargetsLeft = 0;
+            this.globals.totalShots = 0;
+            this.globals.totalHits = 0;
+            //================================================================ chris wang added end ==
+            this.accuracy = document.getElementById("accuracy");
+            this.accuracy.textContent="";
             this.target_list=new LinkedList();
             this.target_bitmap=[0,0,0];
         }
         make_control_panel() {
             this.key_triggered_button( "Generate Targets",[ "x" ], () =>  this.gen());
+            this.key_triggered_button( "Begin round",[ "t" ], () =>  this.StartRound());
             this.new_line();
 
         }
+        //================================================================ chris wang added start =======
+        StartRound()
+        {
+                this.RoundActive = true;
+                this.RoundScore = 0;
+                this.RoundTargetsLeft = 20;
+                this.globals.totalShots = 0;
+                this.globals.totalHits = 0;
+                this.target_bitmap=[0,0,0];
+                this.target_list=new LinkedList();
+
+        }
+
+        EndRound()
+        {
+            this.RoundActive = false;
+            this.RoundTargetsLeft = 0;
+        }
+
+        //================================================================ chris wang added end ===========
         gen(){
             this.target_bitmap=[0,0,0];
             this.target_list=new LinkedList();
@@ -104,16 +144,23 @@ window.Target_Manager = window.classes.Target_Manager =
         draw_targets(graphics_state,t){
             for (let y=0;y<3;y++){
                 if(!this.target_bitmap[y]){
+
                     const randx = (Math.random()-.5)*90 ;
-                    const randy = (Math.random()) *8 +2*y;
+                    const randy = (Math.random()) *8 +2*y +10;
                     const randz = (Math.random()-2)*20-40 ;
                     const rands=(Math.random()+1)*2;
-                    let targ= new Target(randx,randy,randz,rands);
+                    let targ= new Target(randx,randy,randz,rands,t);
                     let targ_transform=Mat4.identity();
                     targ_transform=  targ_transform.times(Mat4.translation([targ.coordinates.x,targ.coordinates.y,targ.coordinates.z]));
-                    this.target_list.add(targ);
+                    if(this.target_list.size!=3){
+                        this.target_list.add(targ);
+                    }else {
+                        this.target_list.GetNth(y).set(targ);
+                    }
                     this.target_bitmap[y]=1;
                     console.log(randx,randy,randz);
+
+
                     this.shapes.target.draw(graphics_state,targ_transform,this.materials.target);
                 }else{
                     let targ_transform=Mat4.identity();
@@ -125,6 +172,12 @@ window.Target_Manager = window.classes.Target_Manager =
                             this.target_list.GetNth(y).coordinates.x,
                             this.target_list.GetNth(y).coordinates.y,
                             this.target_list.GetNth(y).coordinates.z]));
+                    if(t-this.target_list.GetNth(y).creation_time>6){//refresh every 6 sec
+                        this.target_bitmap[y]=0;
+                        //this.target_list.removeFrom(y);
+                    }
+
+
                     this.shapes.target.draw(graphics_state,targ_transform,this.materials.target);
 
                 }
@@ -132,11 +185,26 @@ window.Target_Manager = window.classes.Target_Manager =
         }
         display(graphics_state){
             const t = graphics_state.animation_time / 1000;
-            this.draw_targets(graphics_state,t);
+
+            //console.log(this.scoreElement.nodeValue);
+            this.accuracy.textContent=String(this.globals.totalHits)+"/"+String(this.globals.totalShots);
+
+
+
             //let targ_transform=Mat4.identity();
             //targ_transform=targ_transform.times(Mat4.translation([-12, 7, -20]));
             //this.shapes.target.draw(graphics_state, targ_transform, this.materials.target);
+            //============================================== chris wang added start ==========================================
+            if (this.RoundActive)
+            {
+                if (this.RoundTargetsLeft > 0)
+                    this.draw_targets(graphics_state,t);
+                    //this.gen();
 
+                if (this.RoundTargetsLeft <= 0)
+                    this.EndRound();
+            }
+            //============================================== chris wang added end ==========================
         }
 
     }

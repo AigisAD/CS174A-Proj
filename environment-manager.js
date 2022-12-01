@@ -1,67 +1,8 @@
 const NUM_PARTS = 30;
 const MAP_BOUNDS = 200;
 
-class Node {
-    // constructor
-    constructor(element) {
-        this.element = element;
-        this.next = null
-    }
-}
-// linkedlist class
-class LinkedList {
-    constructor() {
-        this.head = null;
-        this.size = 0;
-    }
-
-    // adds an element at the end
-    // of list
-    add(element) {
-        // creates a new node
-        var node = new Node(element);
-
-        // to store current node
-        var current;
-
-        // if list is Empty add the
-        // element and make it head
-        if (this.head == null)
-            this.head = node;
-        else {
-            current = this.head;
-
-            // iterate to the end of the
-            // list
-            while (current.next) {
-                current = current.next;
-            }
-
-            // add node
-            current.next = node;
-        }
-        this.size++;
-    }
-    GetNth(index)
-    {
-        var current = this.head;
-        var count = 0;
-        /*
-         index of Node we are currently looking at
-                         */
-        while (current != null) {
-            if (count == index)
-                return current.element;
-            count++;
-            current = current.next;
-        }
-
-        return 0;
-    }
-
-}
 function tuple3(x, y, z) { return { x: x, y: y, z: z } }
-class Target {
+class Obstacle {
     constructor(x,y,z) {
         this.coordinates=tuple3(x,y,z);
     }
@@ -118,7 +59,7 @@ window.Environment_Manager = window.classes.Environment_Manager =
 
 
 
-                    let targ= new Target(randx,randy,randz,rands);
+                    let targ= new Obstacle(randx,randy,randz,rands);
                     let targ_transform=Mat4.identity();
 
                     targ_transform=  targ_transform.times(Mat4.translation([targ.coordinates.x,targ.coordinates.y,targ.coordinates.z]));
@@ -137,11 +78,11 @@ window.Environment_Manager = window.classes.Environment_Manager =
                             this.obstacle_list.GetNth(y).coordinates.y,
                             this.obstacle_list.GetNth(y).coordinates.z]));
 
-                    // targ_transform=  targ_transform
-                    //     .times(Mat4.scale([
-                    //         this.obstacle_list.GetNth(y).coordinates.x*0.1,
-                    //         this.obstacle_list.GetNth(y).coordinates.y*0.1,
-                    //         this.obstacle_list.GetNth(y).coordinates.z*0.1]));
+                     targ_transform=  targ_transform
+                         .times(Mat4.scale([
+                             4,
+                             4,
+                             4]));
 
 
 
