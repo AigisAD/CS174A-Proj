@@ -47,6 +47,22 @@ class Aiming_Manager extends Scene_Component
         make_control_panel() {
 
         }
+        checkCollisions(){
+            for (let i = 0; i < this.live_bullets.length; i++){
+                let bullet = this.live_bullets[i];
+                let bullet_pos = Vec.of(bullet.pos[0][3], bullet.pos[1][3], bullet.pos[2][3]);
+                for (let j = 0; j < this.context.globals.targets.length; j++){
+                    let target = this.context.globals.targets[j];;
+                    let target_pos = Vec.of(target.coordinates[0], target.coordinates[1], target.coordinates[2]);
+                    var diff = target_pos.minus(bullet_pos);
+                    var distance = Math.sqrt(diff[0]*diff[0] + diff[1]*diff[1] + diff[2]*diff[2]);
+                    if (distance <= this.bullet_size + 1){
+                        this.live_bullets.shift();
+                        this.context.globals.targets.shift();
+                    }
+                }
+            }
+        }
         drawGun(graphics_state){
             //let transform= Mat4.inverse(this.target());
             let transform= Mat4.inverse(this.target())
@@ -97,6 +113,7 @@ class Aiming_Manager extends Scene_Component
                 this.shapes.bullet.draw(graphics_state, this.live_bullets[i].pos, this.materials.red);
                 this.updateBulletPos(graphics_state);
             }
+            this.checkCollisions();
 
         }
     }

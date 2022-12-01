@@ -91,6 +91,7 @@ class Target_Manager extends Scene_Component {
     };
         this.target_list=new LinkedList();
         this.target_bitmap=[0,0,0];
+        this.context.globals.targets = this.target_list;
     }
     make_control_panel() {
         this.key_triggered_button( "Generate Targets",[ "x" ], () =>  this.gen());
