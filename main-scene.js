@@ -11,7 +11,7 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
                 context.register_scene_component(new Environment_Manager(context, control_box.parentElement.insertCell()));
 
             context.globals.graphics_state.camera_transform = Mat4.look_at(Vec.of(0, 25, 0), Vec.of(0, 25, 20), Vec.of(0, 1, 0));
-
+            this.context = context;
             // *** Mouse controls: ***
             this.mouse = { "from_center": Vec.of( 0,0 ) };                           // Measure mouse steering, for rotating the flyaround camera:
             const mouse_position = ( e, rect = context.canvas.getBoundingClientRect() ) =>
@@ -40,9 +40,15 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
                     phong: context.get_instance(Phong_Shader).material(Color.of(50/255,50/255,50/255,1), {ambient: 1}),
                     phong2: context.get_instance(Phong_Shader).material(Color.of(253/255,250/255,150/255,1), {ambient: 1,}),
                     sky: context.get_instance(Phong_Shader).material(Color.of(0/255,0/255,255/255,1), {ambient: 1,}),
-                    sky2: context.get_instance(Phong_Shader).material(Color.of(0/255,0/255,200/255,1), {ambient: 1,}),
-                    sky3: context.get_instance(Phong_Shader).material(Color.of(0/255,50/255,200/255,1), {ambient: 1,}),
+                    //sky2: context.get_instance(Phong_Shader).material(Color.of(0/255,0/255,200/255,1), {ambient: 1,}),
+                    //sky3: context.get_instance(Phong_Shader).material(Color.of(0/255,50/255,200/255,1), {ambient: 1,}),
                     yellow: context.get_instance(Phong_Shader).material(Color.of(1, 1, 0, 1), {ambient:1}),
+                    sky3: context.get_instance(Phong_Shader).material( Color.of( 0,0,0,1),
+                        { ambient: 1, texture: this.context.get_instance( "/assets/sky2.png" ) } ),
+                    sky2: context.get_instance(Phong_Shader).material( Color.of( 0,0,0,1),
+                        { ambient: 1, texture: this.context.get_instance( "/assets/sky2.png" ) } ),
+
+
                 };
             this.lights = [new Light(Vec.of(350, 270, 0, 1), Color.of(0, 1, 1, 1), 100*10)];
 
@@ -75,9 +81,9 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
                 .times(Mat4.scale([1, 25, 200]));
 
             this.shapes.box.draw(graphics_state, wall_1, this.materials.phong2);
-            this.shapes.box.draw(graphics_state, wall_2, this.materials.phong2.override({color: Color.of([0.156, 0, 1, 1])}));
-            this.shapes.box.draw(graphics_state, wall_3, this.materials.phong2.override({color: Color.of([0.156, 0, 1, 1])}));
-            this.shapes.box.draw(graphics_state, wall_4, this.materials.phong2.override({color: Color.of([0.156, 0, 1, 1])}));
+            this.shapes.box.draw(graphics_state, wall_2, this.materials.phong2);
+            this.shapes.box.draw(graphics_state, wall_3, this.materials.phong2);
+            this.shapes.box.draw(graphics_state, wall_4, this.materials.phong2);
 
 
             var sky_1 = Mat4.identity().times(Mat4.translation([0, 200, -500]))
@@ -90,8 +96,8 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
                 .times(Mat4.scale([1, 250, 500]));
             var sky_5 = Mat4.identity().times(Mat4.scale([500, 1, 500]))
                 .times(Mat4.translation([0, 350, 0]));
-            this.shapes.box.draw(graphics_state, sky_1, this.materials.sky);
-            this.shapes.box.draw(graphics_state, sky_2, this.materials.sky);
+            this.shapes.box.draw(graphics_state, sky_1, this.materials.sky2);
+            this.shapes.box.draw(graphics_state, sky_2, this.materials.sky2);
             this.shapes.box.draw(graphics_state, sky_3, this.materials.sky2);
             this.shapes.box.draw(graphics_state, sky_4, this.materials.sky2);
             this.shapes.box.draw(graphics_state, sky_5, this.materials.sky3);

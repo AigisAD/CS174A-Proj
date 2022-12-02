@@ -44,7 +44,8 @@ window.Environment_Manager = window.classes.Environment_Manager =
             this.materials = {
                 phong: context.get_instance(Phong_Shader).material(Color.of(red, green, blue, 1), {ambient: 0}),
                 box: context.get_instance(Phong_Shader).material(Color.of(red, green, blue, 1), {ambient: 0}),
-
+                test: context.get_instance(Phong_Shader).material( Color.of( 0,0,0,1),
+                    { ambient: 1, texture: this.context.get_instance( "/assets/crate.png" ) } )
             };
             this.context.globals.obstacles = [];
             this.obstacle_bitmap = new Array(30).fill(0);
@@ -126,7 +127,7 @@ window.Environment_Manager = window.classes.Environment_Manager =
 
                     obst_transform = obst_transform.times(Mat4.translation([obst.coordinates.x, obst.coordinates.y, obst.coordinates.z]));
                     this.obstacle_bitmap[y] = 1;
-                    this.shapes.box.draw(graphics_state, obst_transform, this.materials.box);
+                    this.shapes.box.draw(graphics_state, obst_transform, this.materials.test);
 
                 } else {
 
@@ -148,7 +149,7 @@ window.Environment_Manager = window.classes.Environment_Manager =
                             this.context.globals.obstacles[y].zSize,]));
 
 
-                    this.shapes.box.draw(graphics_state, obst_transform, this.materials.box);
+                    this.shapes.box.draw(graphics_state, obst_transform, this.materials.test);
 
 
                 }
