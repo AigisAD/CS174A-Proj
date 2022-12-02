@@ -5,9 +5,11 @@ function tuple3(x, y, z) { return { x: x, y: y, z: z } }
 class Obstacle {
     constructor(x,y,z,sx,sy,sz) {
         this.coordinates=tuple3(x,y,z);
+
         this.xSize = sx;
         this.ySize = sy;
         this.zSize = sz;
+
     }
 }
 window.Environment_Manager = window.classes.Environment_Manager =
@@ -26,10 +28,12 @@ window.Environment_Manager = window.classes.Environment_Manager =
             const shapes = {
                 box: new Cube(),
             }
+
             this.submit_shapes(context, shapes);
             this.materials = {
                 phong: context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: 0}),
                 box: context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: 0}),
+
 
             };
             this.context.globals.obstacles = [];
@@ -67,6 +71,7 @@ window.Environment_Manager = window.classes.Environment_Manager =
             }
         }
 
+
         draw_obstacles(graphics_state, t) {
             for (let y = 0; y < NUM_PARTS; y++) {
                 if (!this.obstacle_bitmap[y]) {
@@ -75,6 +80,7 @@ window.Environment_Manager = window.classes.Environment_Manager =
                     const scaley = this.getRandomInt(4, 16);
                     const scalez = this.getRandomInt(4, 16);
 
+
                     const randx = (Math.random() - .5) * MAP_BOUNDS * 1.3;
                     const randy = (0);
                     const randz = (Math.random() - .5) * MAP_BOUNDS * 1.2;
@@ -82,6 +88,7 @@ window.Environment_Manager = window.classes.Environment_Manager =
                     let obst = new Obstacle(randx, randy, randz, scalex, scaley, scalez);
 
                     this.context.globals.obstacles.push(obst);
+
 
                     obst_transform = obst_transform.times(Mat4.translation([obst.coordinates.x, obst.coordinates.y, obst.coordinates.z]));
                     this.obstacle_bitmap[y] = 1;
@@ -96,6 +103,7 @@ window.Environment_Manager = window.classes.Environment_Manager =
                             this.context.globals.obstacles[y].coordinates.x,
                             this.context.globals.obstacles[y].coordinates.y,
                             this.context.globals.obstacles[y].coordinates.z]));
+
 
                     obst_transform = obst_transform
                         .times(Mat4.scale([
