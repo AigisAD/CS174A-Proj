@@ -90,17 +90,51 @@ class Target_Manager extends Scene_Component {
 
     };
         this.context.globals.targets=[];
-        this.target_bitmap=[0,0,0];
+        this.targets_at_once=4; //modifiable
+        //================================================================ chris wang added start ==============================================
+        this.RoundScore = 0;
+        this.RoundActive = false;
+        this.RoundTargetsLeft = 0;
+        this.RoundTargetsMax=20;//modifable
+        this.globals.totalShots = 0;
+        this.globals.totalHits = 0;
+        //================================================================ chris wang added end ==
+        this.target_bitmap=new Array(this.targets_at_once).fill(0);
+        this.accuracy = document.getElementById("accuracy");
+        this.accuracy.textContent="";
+        this.score = document.getElementById("score");
+        this.score.textContent="";
+        this.targetsRem = document.getElementById("targetsLeft");
+        this.accuracy.textContent="";
+        this.difficulty=0;
     }
     make_control_panel() {
-        this.key_triggered_button( "Generate Targets",[ "x" ], () =>  this.gen());
+        this.key_triggered_button( "Regenerate Targets",[ "x" ], () =>  this.gen());
+        this.key_triggered_button( "Begin round",[ "t" ], () =>  this.StartRound());
+        this.key_triggered_button( "Change difficulty",[ "c" ], () =>  this.difficulty=!this.difficulty);
         this.new_line();
 
     }
-    gen(){
-        this.target_bitmap=[0,0,0];
+    StartRound()
+    {
+        this.RoundActive = true;
+        this.RoundScore = 0;
+        this.RoundTargetsLeft = this.RoundTargetsMax;
+        this.globals.totalShots = 0;
+        this.globals.totalHits = 0;
+        this.target_bitmap=new Array(this.targets_at_once).fill(0);
         this.context.globals.targets=[];
-        for (let i = 0; i < 3; i++){
+    }
+
+    EndRound()
+    {
+        this.RoundActive = false;
+        this.RoundTargetsLeft = 0;
+    }
+    gen(){
+        this.target_bitmap=new Array(this.targets_at_once).fill(0);
+        this.context.globals.targets=[];
+        for (let i = 0; i < this.targets_at_once; i++){
             const randx = (Math.random()-.5)*90 ;
             const randy = (Math.random()) *8 +2*i;
             const randz = (Math.random()-2)*20-40 ;
@@ -125,8 +159,10 @@ class Target_Manager extends Scene_Component {
                 this.shapes.target.draw(graphics_state,targ_transform,this.materials.target);
             }else{
                 let targ_transform=Mat4.identity();
-                this.context.globals.targets[y].coordinates.x+=0.5*Math.sin(
-                    t*Math.PI*2/this.context.globals.targets[y].speed);
+                if(this.difficulty==1) {
+                    this.context.globals.targets[y].coordinates.x += 0.5 * Math.sin(
+                        t * Math.PI * 2 / this.context.globals.targets[y].speed);
+                }
                 targ_transform=  targ_transform
                     //.times(Mat4.translation(10*Math.sin(t*Math.PI/5)-5,0,0))
                     .times(Mat4.translation([
@@ -136,11 +172,30 @@ class Target_Manager extends Scene_Component {
                 this.shapes.target.draw(graphics_state,targ_transform,this.materials.target);
 
             }
+
+
+        }
+        if(this.context.globals.targets.length==0){
+            this.gen();
         }
     }
     display(graphics_state){
         const t = graphics_state.animation_time / 1000;
-        this.draw_targets(graphics_state,t);
+        this.accuracy.textContent=String(this.globals.totalHits)+"/"+String(this.globals.totalShots);
+        this.RoundScore=10*this.globals.totalHits;
+        this.score.textContent=this.RoundScore;
+        this.RoundTargetsLeft=this.RoundTargetsMax-this.globals.totalHits;
+        this.targetsRem.textContent=String(this.RoundTargetsLeft);
+        if (this.RoundActive)
+        {
+
+            if (this.RoundTargetsLeft > 0)
+                this.draw_targets(graphics_state,t);
+            //this.gen();
+
+            if (this.RoundTargetsLeft <= 0)
+                this.EndRound();
+        }
         //let targ_transform=Mat4.identity();
         //targ_transform=targ_transform.times(Mat4.translation([-12, 7, -20]));
         //this.shapes.target.draw(graphics_state, targ_transform, this.materials.target);

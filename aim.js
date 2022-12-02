@@ -57,6 +57,7 @@ class Aiming_Manager extends Scene_Component
                 var distance = Math.sqrt(diff[0]*diff[0] + diff[1]*diff[1] + diff[2]*diff[2]);
                 if (distance <= this.bullet_size + 1){
                     console.log("he;")
+                    this.context.globals.totalHits++;
                     this.live_bullets.shift();
 
                 }else{
@@ -79,6 +80,7 @@ class Aiming_Manager extends Scene_Component
         shoot(graphics_state) {
         
             console.log("shoot");
+            this.context.globals.totalShots++;
             const viewDirection = this.target()[2];
             //extract the 3-dimensional view vector
             const viewVector = Vec.of(viewDirection[0], viewDirection[1], viewDirection[2]);
