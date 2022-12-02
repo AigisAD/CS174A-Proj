@@ -1,3 +1,5 @@
+
+
 const NUM_PARTS = 20;
 const MAP_BOUNDS = 200;
 
@@ -9,6 +11,8 @@ class Obstacle {
         this.xSize = sx;
         this.ySize = sy;
         this.zSize = sz;
+
+
 
     }
 }
@@ -29,22 +33,31 @@ window.Environment_Manager = window.classes.Environment_Manager =
                 box: new Cube(),
             }
 
+
+
+            let red = this.getRandomInt(1/255,255);
+            let green = this.getRandomInt(1/255,255);
+            let blue = this.getRandomInt(1/255,255);
+
+
             this.submit_shapes(context, shapes);
             this.materials = {
-                phong: context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: 0}),
-                box: context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: .8}),
-
+                phong: context.get_instance(Phong_Shader).material(Color.of(red, green, blue, 1), {ambient: 0}),
+                box: context.get_instance(Phong_Shader).material(Color.of(red, green, blue, 1), {ambient: 0}),
 
             };
             this.context.globals.obstacles = [];
             this.obstacle_bitmap = new Array(30).fill(0);
 
 
+
         }
+        
 
         make_control_panel() {
-            this.key_triggered_button("Generate Obstacles", ["b"], () => this.genObstacles());
+            this.key_triggered_button("Generate Obstacles", ["p"], () => this.genObstacles());
             this.new_line();
+            this.key_triggered_button("Change Colors", ["l"], this.set_colors);
 
         }
 
@@ -53,6 +66,9 @@ window.Environment_Manager = window.classes.Environment_Manager =
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
         }
+
+
+
 
         genObstacles() {
             //this.obstacle_bitmap = new Array(30).fill(0);
@@ -93,6 +109,7 @@ window.Environment_Manager = window.classes.Environment_Manager =
             for (let y = 0; y < NUM_PARTS; y++) {
                 if (!this.obstacle_bitmap[y]) {
                     let obst_transform = Mat4.identity();
+
                     const scalex = this.getRandomInt(4, 16);
                     const scaley = this.getRandomInt(4, 16);
                     const scalez = this.getRandomInt(4, 16);
@@ -114,6 +131,8 @@ window.Environment_Manager = window.classes.Environment_Manager =
                 } else {
 
                     let obst_transform = Mat4.identity();
+
+
 
                     obst_transform = obst_transform
                         .times(Mat4.translation([
@@ -140,6 +159,9 @@ window.Environment_Manager = window.classes.Environment_Manager =
         display(graphics_state) {
             const t = graphics_state.animation_time / 1000;
             this.draw_obstacles(graphics_state,t);
+
+
+
 
         }
     }
