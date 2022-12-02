@@ -1,8 +1,9 @@
 class Bullet {
 
-    constructor(pos, dir){
+    constructor(pos, dir, time){
         this.pos = pos;
         this.dir = dir;
+        this.spawn_time = time
     }
 }
 window.Aiming_Manager = window.classes.Aiming_Manager = 
@@ -46,6 +47,25 @@ class Aiming_Manager extends Scene_Component
         make_control_panel() {
 
         }
+        checkCollisions(bullet){
+            let bullet_pos = Vec.of(bullet.pos[0][3], bullet.pos[1][3], bullet.pos[2][3]);
+            let new_array = []
+            for (let i = 0; i < this.context.globals.targets.length; i++) {
+                let target = this.globals.targets[i];
+                let target_pos = Vec.of(target.coordinates["x"], target.coordinates["y"], target.coordinates["z"]);
+                var diff = target_pos.minus(bullet_pos);
+                var distance = Math.sqrt(diff[0]*diff[0] + diff[1]*diff[1] + diff[2]*diff[2]);
+                if (distance <= this.bullet_size + 1){
+                    console.log("he;")
+                    this.live_bullets.shift();
+
+                }else{
+                    new_array.push(target);
+                }
+
+            }
+            this.context.globals.targets = new_array;
+        }
         drawGun(graphics_state){
             //let transform= Mat4.inverse(this.target());
             let transform= Mat4.inverse(this.target())
@@ -56,7 +76,8 @@ class Aiming_Manager extends Scene_Component
 
             this.shapes.gun.draw(graphics_state,transform,this.materials.phong);
         }
-        shoot() {
+        shoot(graphics_state) {
+        
             console.log("shoot");
             const viewDirection = this.target()[2];
             //extract the 3-dimensional view vector
@@ -71,12 +92,16 @@ class Aiming_Manager extends Scene_Component
 
             //create the model_transform for the initial position of the new bullet and scale according to BULLET_SIZE
             let bulletTransform = Mat4.identity().times(translationMatrix).times(Mat4.scale([this.bullet_size, this.bullet_size, this.bullet_size]));
-            let bullet = new Bullet(bulletTransform, viewVector);
+            let bullet = new Bullet(bulletTransform, viewVector, this.context.globals.graphics_state.animation_time/1000);
             this.live_bullets.push(bullet);
 
         }
         updateBulletPos(graphics_state){
             this.live_bullets.map( (bullet) => {
+                if( graphics_state.animation_time/1000 - bullet.spawn_time > 1){
+                    this.live_bullets.shift();
+                    return;
+                }
                 let dt = graphics_state.animation_delta_time / 1000;
                 const bulletDisplacement= -dt * this.bullet_velocity;
                 //translate bullet based on elapsed time
@@ -90,6 +115,7 @@ class Aiming_Manager extends Scene_Component
             this.drawGun(graphics_state);
             for (let i = 0; i < this.live_bullets.length; i++){
                 this.shapes.bullet.draw(graphics_state, this.live_bullets[i].pos, this.materials.red);
+                this.checkCollisions(this.live_bullets[i]);
                 this.updateBulletPos(graphics_state);
             }
 
