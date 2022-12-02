@@ -54,9 +54,9 @@ window.Environment_Manager = window.classes.Environment_Manager =
         draw_obstacles(graphics_state,t){
             for (let y=0;y<NUM_PARTS;y++){
                 if(!this.obstacle_bitmap[y]){
-                    const scalex = this.getRandomInt(1,16) ;
-                    const scaley = this.getRandomInt(1,16) ;
-                    const scalez = this.getRandomInt(1,16) ;
+                    const scalex = this.getRandomInt(4,16) ;
+                    const scaley = this.getRandomInt(4,16) ;
+                    const scalez = this.getRandomInt(4,16) ;
                     const randx = (Math.random()-.5)*MAP_BOUNDS*1.3 ;
                     const randy = (0);
                     const randz = (Math.random()-.5)*MAP_BOUNDS*1.2 ;
