@@ -55,7 +55,7 @@ class Aiming_Manager extends Scene_Component
                 let target_pos = Vec.of(target.coordinates["x"], target.coordinates["y"], target.coordinates["z"]);
                 var diff = target_pos.minus(bullet_pos);
                 var distance = Math.sqrt(diff[0]*diff[0] + diff[1]*diff[1] + diff[2]*diff[2]);
-                if (distance <= this.bullet_size + 1){
+                if (distance <= this.bullet_size + 3){
                     console.log("he;")
                     this.context.globals.totalHits++;
                     this.live_bullets.shift();

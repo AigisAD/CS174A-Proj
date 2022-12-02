@@ -32,7 +32,7 @@ window.Environment_Manager = window.classes.Environment_Manager =
             this.submit_shapes(context, shapes);
             this.materials = {
                 phong: context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: 0}),
-                box: context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: 0}),
+                box: context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: .8}),
 
 
             };
@@ -54,7 +54,7 @@ window.Environment_Manager = window.classes.Environment_Manager =
         }
 
         genObstacles() {
-            this.obstacle_bitmap = new Array(30).fill(0);
+            //this.obstacle_bitmap = new Array(30).fill(0);
             this.context.globals.obstacles = [];
             for (let i = 0; i < NUM_PARTS; i++) {
                 const scalex = this.getRandomInt(4, 16);
