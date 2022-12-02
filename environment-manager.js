@@ -1,4 +1,4 @@
-const NUM_PARTS = 30;
+const NUM_PARTS = 20;
 const MAP_BOUNDS = 200;
 
 function tuple3(x, y, z) { return { x: x, y: y, z: z } }
@@ -39,6 +39,7 @@ window.Environment_Manager = window.classes.Environment_Manager =
             this.context.globals.obstacles = [];
             this.obstacle_bitmap = new Array(30).fill(0);
 
+
         }
 
         make_control_panel() {
@@ -71,6 +72,22 @@ window.Environment_Manager = window.classes.Environment_Manager =
             }
         }
 
+
+//         const boxBoundX1 = this.context.globals.obstacles[y].coordinates.x + this.xSize;
+//         const boxBoundX2 = this.context.globals.obstacles[y].coordinates.x - this.xSize;
+//         const boxBoundZ1 = this.context.globals.obstacles[y].coordinates.z + this.zSize;
+//         const boxBoundZ2 = this.context.globals.obstacles[y].coordinates.z - this.zSize;
+//
+//         if (this.camVector[0] > boxBoundX1 && this.camVector[0] < boxBoundX2){
+//         this.camVector[2] = boxBoundZ1;
+//         }
+// if (this.camVector[0] < boxBoundX1 && this.camVector[0] > boxBoundX2){
+//     this.camVector[2] = boxBoundZ2;
+// }
+//
+// if (this.camVector[2] > boxBoundZ1){
+//     this.camVector[2] = boxBoundZ2;
+// }
 
         draw_obstacles(graphics_state, t) {
             for (let y = 0; y < NUM_PARTS; y++) {

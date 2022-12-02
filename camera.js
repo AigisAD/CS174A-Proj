@@ -138,6 +138,7 @@ class Camera_Movement extends Scene_Component
             if (this.camVector[2] < -mapBound)
                 this.camVector[2] = -mapBound;
 
+
             if(this.context.globals.obstacles!=undefined) {
                 for (let y = 0; y < this.context.globals.obstacles.length; y++) {
                     const xBound1 = -1*(this.context.globals.obstacles[y].coordinates.x + this.context.globals.obstacles[y].xSize )-2.5;
@@ -165,6 +166,7 @@ class Camera_Movement extends Scene_Component
                     }
                 }
             }
+
         }
 
         updateCameraView(){

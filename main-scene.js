@@ -1,3 +1,5 @@
+
+
 window.Term_Project_Scene = window.classes.Term_Project_Scene =
     class Term_Project_Scene extends Scene_Component {
         constructor(context, control_box)     // The scene begins by requesting the camera, shapes, and materials it will need.
@@ -28,6 +30,10 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
 
             this.submit_shapes(context, shapes);
 
+            this.music = new Audio("assets/csgo.mp3");
+            this.music.loop = true;
+            this.music.volume = 0.1;
+
 
             this.materials =
                 {
@@ -47,7 +53,7 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
             graphics_state.lights = this.lights;        // Use the lights stored in this.lights.
             const t = graphics_state.animation_time / 1000, dt = graphics_state.animation_delta_time / 1000;
 
-
+            this.music.play();
             // Drawing map
             var base_map = Mat4.identity().times(Mat4.scale([200, 1, 200]))
                 .times(Mat4.translation([0, -5, 0]));
