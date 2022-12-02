@@ -126,6 +126,7 @@ class Camera_Movement extends Scene_Component
             lookVector = lookVector.times(this.walkSpeed);
             this.camVector = this.camVector.minus(lookVector);
 
+
             const mapBound = 180;
             this.camVector[1] = -this.height;
             if (this.camVector[0] > mapBound)
@@ -137,6 +138,34 @@ class Camera_Movement extends Scene_Component
             if (this.camVector[2] < -mapBound)
                 this.camVector[2] = -mapBound;
 
+
+            if(this.context.globals.obstacles!=undefined) {
+                for (let y = 0; y < this.context.globals.obstacles.length; y++) {
+                    const xBound1 = -1*(this.context.globals.obstacles[y].coordinates.x + this.context.globals.obstacles[y].xSize )-2.5;
+                    const xBound2 = -1*(this.context.globals.obstacles[y].coordinates.x - this.context.globals.obstacles[y].xSize )+2.5;
+                    const zBound1 = -1*(this.context.globals.obstacles[y].coordinates.z + this.context.globals.obstacles[y].zSize )-2.5;
+                    const zBound2 = -1*(this.context.globals.obstacles[y].coordinates.z - this.context.globals.obstacles[y].zSize )+2.5;
+                    //console.log(this.context.globals.obstacles.length);
+                    console.log(xBound1,xBound2,zBound1,zBound2);
+                    console.log(this.camVector);
+                    if (this.camVector[0] > xBound1 && this.camVector[0] < xBound2 && this.camVector[2] > zBound2 -1.3  && this.camVector[2] < zBound2+1.3   ) {
+                        //console.log("a");
+                        this.camVector[2] = zBound2+1;
+                    }
+                    if (this.camVector[0] > xBound1 && this.camVector[0] < xBound2 && this.camVector[2] > zBound1-1.3 && this.camVector[2] < zBound1+1.3 ) {
+                        //console.log("b");
+                        this.camVector[2] = zBound1-1;
+                    }
+                    if (this.camVector[2] > zBound1 && this.camVector[2] < zBound2 && this.camVector[0] > xBound2-1.3&& this.camVector[0] < xBound2+1.3) {
+                        //console.log("c");
+                        this.camVector[0] = xBound2+1;
+                    }
+                    if (this.camVector[2] > zBound1 && this.camVector[2] < zBound2 && this.camVector[0] > xBound1-1.3 &&  this.camVector[0] < xBound1+1.3) {
+                        //console.log("d");
+                        this.camVector[0] = xBound1-1;
+                    }
+                }
+            }
 
         }
 
