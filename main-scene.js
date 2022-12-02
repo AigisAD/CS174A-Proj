@@ -1,3 +1,5 @@
+
+
 window.Term_Project_Scene = window.classes.Term_Project_Scene =
     class Term_Project_Scene extends Scene_Component {
         constructor(context, control_box)     // The scene begins by requesting the camera, shapes, and materials it will need.
@@ -28,14 +30,19 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
 
             this.submit_shapes(context, shapes);
 
+            this.music = new Audio("assets/csgo.mp3");
+            this.music.loop = true;
+            this.music.volume = 0.1;
+
 
             this.materials =
                 {
                     phong: context.get_instance(Phong_Shader).material(Color.of(0.5, 0.5, 0.5, 1), {ambient: 1}),
-                    phong2: context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: 1,}),
+                    phong2: context.get_instance(Phong_Shader).material(Color.of(1, .68, .26, 1), {ambient: .5}),
                     red: context.get_instance(Phong_Shader).material(Color.of(1, 0, 0, 1), {ambient:1}),
                 };
-            this.lights = [new Light(Vec.of(-5, 5, 5, 1), Color.of(0, 1, 1, 1), 100000)];
+            this.lights = [new Light(Vec.of(-5, 5, 5, 1), Color.of(0, 1, 1, 1), 100000),new Light(Vec.of(0,-50,72,1), Color.of(0, 1, 1, 1), 100000)];
+
 
         }
 
@@ -47,7 +54,7 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
             graphics_state.lights = this.lights;        // Use the lights stored in this.lights.
             const t = graphics_state.animation_time / 1000, dt = graphics_state.animation_delta_time / 1000;
 
-
+            this.music.play();
             // Drawing map
             var base_map = Mat4.identity().times(Mat4.scale([200, 1, 200]))
                 .times(Mat4.translation([0, -5, 0]));
@@ -61,11 +68,12 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
                 .times(Mat4.scale([1, 25, 200]));
             var wall_4 = Mat4.identity().times(Mat4.translation([-200, 20, 0]))
                 .times(Mat4.scale([1, 25, 200]));
-            var sphere = Mat4.identity().times(Mat4.translation([0, 10, 0])).times(Mat4.scale([10, 10, 10]));
+            var sphere = Mat4.identity().times(Mat4.translation([0, 100, -72])).times(Mat4.scale([8, 8, 8]));
             this.shapes.box.draw(graphics_state, wall_1, this.materials.phong.override({color: Color.of([0.156, 0, 1, 1])}));
             this.shapes.box.draw(graphics_state, wall_2, this.materials.phong.override({color: Color.of([0.156, 0, 1, 1])}));
             this.shapes.box.draw(graphics_state, wall_3, this.materials.phong.override({color: Color.of([0.156, 0, 1, 1])}));
             this.shapes.box.draw(graphics_state, wall_4, this.materials.phong.override({color: Color.of([0.156, 0, 1, 1])}));
+            this.shapes.sphere.draw(graphics_state, sphere, this.materials.phong2);
 
 
         }
