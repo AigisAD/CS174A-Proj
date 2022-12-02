@@ -470,6 +470,9 @@ class Webgl_Manager      // This class manages a whole graphics program for one 
            w.requestAnimationFrame    || w.webkitRequestAnimationFrame    // needed for queue-ing up re-display events:
         || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame
         || function( callback, element ) { w.setTimeout(callback, 1000/60);  } )( window );
+
+
+
     }
   set_size( dimensions = [ 1080, 600 ] )                // This function allows you to re-size the canvas anytime.  
     { const [ width, height ] = dimensions;             // To work, it must change the size in CSS, wait for style to re-flow, 
@@ -498,8 +501,13 @@ class Webgl_Manager      // This class manages a whole graphics program for one 
      
       for( let live_string of document.querySelectorAll(".live_string") ) live_string.onload( live_string );
       for ( let s of this.scene_components ) s.display( this.globals.graphics_state );            // Draw each registered animation.
-      this.event = window.requestAnimFrame( this.render.bind( this ) );   // Now that this frame is drawn, request that render() happen 
-    }                                                                     // again as soon as all other web page events are processed.
+      this.event = window.requestAnimFrame( this.render.bind( this ) );   // Now that this frame is drawn, request that render() happen
+
+
+
+    }
+
+
 }
 
 window.Scene_Component = window.tiny_graphics.Scene_Component =

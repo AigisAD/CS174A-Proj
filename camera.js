@@ -90,6 +90,11 @@ class Camera_Movement extends Scene_Component
             //this.updateCameraView();
         }
 
+
+
+
+
+
         //Function to apply movement camera transforms to graphics_state.camera_transform
         applyMovementTransforms(){
             //Bind post_multiply operation to target and assign to doOperation
