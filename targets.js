@@ -223,4 +223,6 @@ class Target_Manager extends Scene_Component {
 
     }
 
+
 }
+

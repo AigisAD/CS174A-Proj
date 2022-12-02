@@ -1,3 +1,5 @@
+
+
 const NUM_PARTS = 20;
 const MAP_BOUNDS = 200;
 
@@ -40,11 +42,14 @@ window.Environment_Manager = window.classes.Environment_Manager =
             this.obstacle_bitmap = new Array(30).fill(0);
 
 
+
         }
+        
 
         make_control_panel() {
-            this.key_triggered_button("Generate Obstacles", ["b"], () => this.genObstacles());
+            this.key_triggered_button("Generate Obstacles", ["p"], () => this.genObstacles());
             this.new_line();
+            this.key_triggered_button("Change Colors", ["l"], this.set_colors);
 
         }
 
