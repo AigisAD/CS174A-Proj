@@ -82,11 +82,13 @@ class Target_Manager extends Scene_Component {
         const shapes={
             box: new Cube(),
             target:new Subdivision_Sphere(4),
+            circle: new Regular_2D_Polygon(2,18)
         }
         this.submit_shapes(context,shapes);
         this.materials={
             phong:  context.get_instance(Phong_Shader).material(Color.of(0.5, 0.5, 0.5, 1), {ambient: 0}),
-            target:  context.get_instance(Phong_Shader).material(Color.of(0.25, 1, 0.25, 1), {ambient: 1}),
+            target:  context.get_instance(Phong_Shader).material(Color.of(0.25, 1, 0.25, 1), {ambient: 0.5}),
+            shadow:context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {ambient: 1}),
 
     };
         this.context.globals.targets=[];
@@ -150,15 +152,18 @@ class Target_Manager extends Scene_Component {
             if(!this.target_bitmap[y]){
                 let targ_transform=Mat4.identity();
                 const randx = (Math.random()-.5)*90 ;
-                const randy = (Math.random()) *8 +2*y;
+                const randy = (Math.random()) *8 +3*y +10;
                 const randz = (Math.random()-2)*20-40 ;
                 const rands=(Math.random()+1)*2;
                 let targ= new Target(randx,randy,randz,rands);
                 this.context.globals.targets.shift();
                 this.context.globals.targets.push(targ);
                 targ_transform=  targ_transform.times(Mat4.translation([targ.coordinates.x,targ.coordinates.y,targ.coordinates.z]));
+                let shadow_trans=targ_transform.times(Mat4.translation([0,(-1*targ.coordinates.y)-3.9,0])).times(Mat4.rotation(Math.PI/2,[1,0,0]));
                 this.target_bitmap[y]=1;
                 this.shapes.target.draw(graphics_state,targ_transform,this.materials.target);
+                this.shapes.circle.draw(graphics_state,shadow_trans,this.materials.shadow);
+
             }else{
                 let targ_transform=Mat4.identity();
                 if(this.difficulty==1) {
@@ -171,7 +176,10 @@ class Target_Manager extends Scene_Component {
                         this.context.globals.targets[y].coordinates.x,
                         this.context.globals.targets[y].coordinates.y,
                         this.context.globals.targets[y].coordinates.z]));
+                let shadow_trans=targ_transform.times(Mat4.translation([0,(-1*this.context.globals.targets[y].coordinates.y)-3.9,0])).times(Mat4.rotation(Math.PI/2,[1,0,0]));;
+
                 this.shapes.target.draw(graphics_state,targ_transform,this.materials.target);
+                this.shapes.circle.draw(graphics_state,shadow_trans,this.materials.shadow);
 
             }
 

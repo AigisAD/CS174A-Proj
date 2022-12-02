@@ -36,6 +36,7 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
 
             this.materials =
                 {
+
                     phong: context.get_instance(Phong_Shader).material(Color.of(100/255,100/255,100/255,1), {ambient: 1}),
                     phong2: context.get_instance(Phong_Shader).material(Color.of(253/255,250/255,150/255,1), {ambient: 1,}),
                     sky: context.get_instance(Phong_Shader).material(Color.of(0/255,0/255,255/255,1), {ambient: 1,}),
@@ -72,6 +73,7 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
                 .times(Mat4.scale([1, 25, 200]));
             var wall_4 = Mat4.identity().times(Mat4.translation([-200, 20, 0]))
                 .times(Mat4.scale([1, 25, 200]));
+
             this.shapes.box.draw(graphics_state, wall_1, this.materials.phong2);
             this.shapes.box.draw(graphics_state, wall_2, this.materials.phong2.override({color: Color.of([0.156, 0, 1, 1])}));
             this.shapes.box.draw(graphics_state, wall_3, this.materials.phong2.override({color: Color.of([0.156, 0, 1, 1])}));
@@ -97,6 +99,8 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
             var sun = Mat4.identity().times(Mat4.translation([350, 270, 0]))
                 .times(Mat4.scale([50, 50, 50]));
             this.shapes.sphere.draw(graphics_state, sun, this.materials.yellow);
+
+
 
 
         }
