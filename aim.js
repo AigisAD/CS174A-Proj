@@ -1,6 +1,6 @@
 class Bullet {
 
-    constructor(pos, dir,time){
+    constructor(pos, dir, time){
         this.pos = pos;
         this.dir = dir;
         this.spawn_time = time
@@ -10,7 +10,7 @@ window.Aiming_Manager = window.classes.Aiming_Manager =
 class Aiming_Manager extends Scene_Component
 {
     /*
-        Aiming_Manager is a Scene_Component responsible for rendering the aim cusor and
+        Aiming_Manager is a Scene_Component responsible for rendering the aim cusor and 
         keeping track of the aimed location of the player
         */
 
@@ -47,6 +47,25 @@ class Aiming_Manager extends Scene_Component
         make_control_panel() {
 
         }
+        checkCollisions(bullet){
+            let bullet_pos = Vec.of(bullet.pos[0][3], bullet.pos[1][3], bullet.pos[2][3]);
+            let new_array = []
+            for (let i = 0; i < this.context.globals.targets.length; i++) {
+                let target = this.globals.targets[i];
+                let target_pos = Vec.of(target.coordinates["x"], target.coordinates["y"], target.coordinates["z"]);
+                var diff = target_pos.minus(bullet_pos);
+                var distance = Math.sqrt(diff[0]*diff[0] + diff[1]*diff[1] + diff[2]*diff[2]);
+                if (distance <= this.bullet_size + 1){
+                    console.log("he;")
+                    this.live_bullets.shift();
+
+                }else{
+                    new_array.push(target);
+                }
+
+            }
+            this.context.globals.targets = new_array;
+        }
         drawGun(graphics_state){
             //let transform= Mat4.inverse(this.target());
             let transform= Mat4.inverse(this.target())
@@ -58,8 +77,8 @@ class Aiming_Manager extends Scene_Component
             this.shapes.gun.draw(graphics_state,transform,this.materials.phong);
         }
         shoot(graphics_state) {
+        
             console.log("shoot");
-            this.globals.totalShots+=1;
             const viewDirection = this.target()[2];
             //extract the 3-dimensional view vector
             const viewVector = Vec.of(viewDirection[0], viewDirection[1], viewDirection[2]);
@@ -96,6 +115,7 @@ class Aiming_Manager extends Scene_Component
             this.drawGun(graphics_state);
             for (let i = 0; i < this.live_bullets.length; i++){
                 this.shapes.bullet.draw(graphics_state, this.live_bullets[i].pos, this.materials.red);
+                this.checkCollisions(this.live_bullets[i]);
                 this.updateBulletPos(graphics_state);
             }
 
