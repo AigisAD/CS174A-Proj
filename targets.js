@@ -108,8 +108,13 @@ window.Target_Manager = window.classes.Target_Manager =
             //================================================================ chris wang added end ==
             this.accuracy = document.getElementById("accuracy");
             this.accuracy.textContent="";
+            this.score = document.getElementById("score");
+            this.score.textContent="";
+            this.targetsRem = document.getElementById("targetsLeft");
+            this.accuracy.textContent="";
+            this.targets_at_once=5; //modifiable
             this.target_list=new LinkedList();
-            this.target_bitmap=[0,0,0];
+            this.target_bitmap=new Array(this.targets_at_once).fill(0);
         }
         make_control_panel() {
             this.key_triggered_button( "Generate Targets",[ "x" ], () =>  this.gen());
@@ -125,7 +130,7 @@ window.Target_Manager = window.classes.Target_Manager =
                 this.RoundTargetsLeft = 20;
                 this.globals.totalShots = 0;
                 this.globals.totalHits = 0;
-                this.target_bitmap=[0,0,0];
+                this.target_bitmap=new Array(this.targets_at_once).fill(0);;
                 this.target_list=new LinkedList();
 
         }
@@ -138,11 +143,11 @@ window.Target_Manager = window.classes.Target_Manager =
 
         //================================================================ chris wang added end ===========
         gen(){
-            this.target_bitmap=[0,0,0];
+            this.target_bitmap=new Array(this.targets_at_once).fill(0);
             this.target_list=new LinkedList();
         }
         draw_targets(graphics_state,t){
-            for (let y=0;y<3;y++){
+            for (let y=0;y<this.targets_at_once;y++){
                 if(!this.target_bitmap[y]){
 
                     const randx = (Math.random()-.5)*90 ;
@@ -152,7 +157,7 @@ window.Target_Manager = window.classes.Target_Manager =
                     let targ= new Target(randx,randy,randz,rands,t);
                     let targ_transform=Mat4.identity();
                     targ_transform=  targ_transform.times(Mat4.translation([targ.coordinates.x,targ.coordinates.y,targ.coordinates.z]));
-                    if(this.target_list.size!=3){
+                    if(this.target_list.size!=this.targets_at_once){
                         this.target_list.add(targ);
                     }else {
                         this.target_list.GetNth(y).set(targ);
@@ -188,7 +193,8 @@ window.Target_Manager = window.classes.Target_Manager =
 
             //console.log(this.scoreElement.nodeValue);
             this.accuracy.textContent=String(this.globals.totalHits)+"/"+String(this.globals.totalShots);
-
+            this.score.textContent=this.RoundScore;
+            this.targetsRem.textContent=this.RoundTargetsLeft;
 
 
             //let targ_transform=Mat4.identity();
@@ -197,6 +203,7 @@ window.Target_Manager = window.classes.Target_Manager =
             //============================================== chris wang added start ==========================================
             if (this.RoundActive)
             {
+
                 if (this.RoundTargetsLeft > 0)
                     this.draw_targets(graphics_state,t);
                     //this.gen();
