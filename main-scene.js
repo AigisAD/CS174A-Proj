@@ -37,14 +37,14 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
             this.materials =
                 {
 
-                    phong: context.get_instance(Phong_Shader).material(Color.of(100/255,100/255,100/255,1), {ambient: 1}),
+                    phong: context.get_instance(Phong_Shader).material(Color.of(50/255,50/255,50/255,1), {ambient: 1}),
                     phong2: context.get_instance(Phong_Shader).material(Color.of(253/255,250/255,150/255,1), {ambient: 1,}),
                     sky: context.get_instance(Phong_Shader).material(Color.of(0/255,0/255,255/255,1), {ambient: 1,}),
                     sky2: context.get_instance(Phong_Shader).material(Color.of(0/255,0/255,200/255,1), {ambient: 1,}),
                     sky3: context.get_instance(Phong_Shader).material(Color.of(0/255,50/255,200/255,1), {ambient: 1,}),
                     yellow: context.get_instance(Phong_Shader).material(Color.of(1, 1, 0, 1), {ambient:1}),
                 };
-            this.lights = [new Light(Vec.of(350, 270, 0, 1), Color.of(0, 1, 1, 1), 10000*1000)];
+            this.lights = [new Light(Vec.of(350, 270, 0, 1), Color.of(0, 1, 1, 1), 100*10)];
 
 
 
@@ -96,9 +96,13 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
             this.shapes.box.draw(graphics_state, sky_4, this.materials.sky2);
             this.shapes.box.draw(graphics_state, sky_5, this.materials.sky3);
 
-            var sun = Mat4.identity().times(Mat4.translation([350, 270, 0]))
-                .times(Mat4.scale([50, 50, 50]));
+
+
+            var sun = Mat4.identity()
+                .times(Mat4.translation([350, 270, 0]))
+                .times(Mat4.scale([50, 50, 50]))
             this.shapes.sphere.draw(graphics_state, sun, this.materials.yellow);
+
 
 
 
