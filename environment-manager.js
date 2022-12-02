@@ -12,7 +12,7 @@ class Obstacle {
 }
 window.Environment_Manager = window.classes.Environment_Manager =
     class Environment_Manager extends Scene_Component {
-        constructor(context,control_box) {
+        constructor(context, control_box) {
             super(context, control_box);
             this.context = context;
             this.canvas = context.canvas;
@@ -22,27 +22,23 @@ window.Environment_Manager = window.classes.Environment_Manager =
             context.globals.movement_controls_target = function (t) {
                 return context.globals.graphics_state.camera_transform
             };
-            const mapBound = 90;
-            const shapes={
+
+            const shapes = {
                 box: new Cube(),
             }
-            this.submit_shapes(context,shapes);
-            this.materials={
-                phong:  context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: 0}),
-                box:  context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: 0}),
+            this.submit_shapes(context, shapes);
+            this.materials = {
+                phong: context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: 0}),
+                box: context.get_instance(Phong_Shader).material(Color.of(1, 1, 1, 1), {ambient: 0}),
 
             };
-            this.obstacle_list=new LinkedList();
+            this.context.globals.obstacles = [];
             this.obstacle_bitmap = new Array(30).fill(0);
-
 
         }
 
-
-
-
         make_control_panel() {
-            this.key_triggered_button( "Generate Obstacles",[ "b" ], () =>  this.gen());
+            this.key_triggered_button("Generate Obstacles", ["b"], () => this.genObstacles());
             this.new_line();
 
         }
@@ -53,73 +49,72 @@ window.Environment_Manager = window.classes.Environment_Manager =
             return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
         }
 
-        gen(){
-            this.obstacle_bitmap=[0,0,0];
-            this.obstacle_list=new LinkedList();
+        genObstacles() {
+            this.obstacle_bitmap = new Array(30).fill(0);
+            this.context.globals.obstacles = [];
+            for (let i = 0; i < NUM_PARTS; i++) {
+                const scalex = this.getRandomInt(4, 16);
+                const scaley = this.getRandomInt(4, 16);
+                const scalez = this.getRandomInt(4, 16);
+
+                const randx = (Math.random() - .5) * MAP_BOUNDS * 1.3;
+                const randy = (0);
+                const randz = (Math.random() - .5) * MAP_BOUNDS * 1.2;
+
+                let obst = new Obstacle(randx, randy, randz, scalex, scaley, scalez);
+
+                this.context.globals.obstacles.push(obst);
+            }
         }
-        draw_obstacles(graphics_state,t){
 
-            for (let y=0;y<NUM_PARTS;y++){
+        draw_obstacles(graphics_state, t) {
+            for (let y = 0; y < NUM_PARTS; y++) {
+                if (!this.obstacle_bitmap[y]) {
+                    let obst_transform = Mat4.identity();
+                    const scalex = this.getRandomInt(4, 16);
+                    const scaley = this.getRandomInt(4, 16);
+                    const scalez = this.getRandomInt(4, 16);
 
-                if(!this.obstacle_bitmap[y]){
-
-                    const scalex = this.getRandomInt(4,16);
-                    const scaley = this.getRandomInt(4,16);
-                    const scalez = this.getRandomInt(4,16);
-
-                    const randx = (Math.random()-.5)*MAP_BOUNDS*1.3 ;
+                    const randx = (Math.random() - .5) * MAP_BOUNDS * 1.3;
                     const randy = (0);
-                    const randz = (Math.random()-.5)*MAP_BOUNDS*1.2 ;
+                    const randz = (Math.random() - .5) * MAP_BOUNDS * 1.2;
 
+                    let obst = new Obstacle(randx, randy, randz, scalex, scaley, scalez);
 
-                    let targ= new Obstacle(randx,randy,randz,scalex,scaley,scalez);
-                    let targ_transform=Mat4.identity();
+                    this.context.globals.obstacles.push(obst);
 
-                    targ_transform=  targ_transform.times(Mat4.translation([targ.coordinates.x,targ.coordinates.y,targ.coordinates.z]));
+                    obst_transform = obst_transform.times(Mat4.translation([obst.coordinates.x, obst.coordinates.y, obst.coordinates.z]));
+                    this.obstacle_bitmap[y] = 1;
+                    this.shapes.box.draw(graphics_state, obst_transform, this.materials.box);
 
-                    this.obstacle_list.add(targ);
-                    this.obstacle_bitmap[y]=1;
-                    console.log(randx,randy,randz);
+                } else {
 
+                    let obst_transform = Mat4.identity();
 
-
-                    this.shapes.box.draw(graphics_state,targ_transform,this.materials.box);
-
-                }else{
-
-                    let targ_transform=Mat4.identity();
-
-                    targ_transform=  targ_transform
+                    obst_transform = obst_transform
                         .times(Mat4.translation([
-                            this.obstacle_list.GetNth(y).coordinates.x,
-                            this.obstacle_list.GetNth(y).coordinates.y,
-                            this.obstacle_list.GetNth(y).coordinates.z]));
+                            this.context.globals.obstacles[y].coordinates.x,
+                            this.context.globals.obstacles[y].coordinates.y,
+                            this.context.globals.obstacles[y].coordinates.z]));
 
-                    targ_transform=  targ_transform
+                    obst_transform = obst_transform
                         .times(Mat4.scale([
-                            this.obstacle_list.GetNth(y).xSize,
-                            this.obstacle_list.GetNth(y).ySize,
-                            this.obstacle_list.GetNth(y).zSize,]));
+                            this.context.globals.obstacles[y].xSize,
+                            this.context.globals.obstacles[y].ySize,
+                            this.context.globals.obstacles[y].zSize,]));
 
 
+                    this.shapes.box.draw(graphics_state, obst_transform, this.materials.box);
 
-                    this.shapes.box.draw(graphics_state,targ_transform,this.materials.box);
 
                 }
             }
         }
-        display(graphics_state){
-            super.display(graphics_state);
+
+
+        display(graphics_state) {
             const t = graphics_state.animation_time / 1000;
-            let model_transform = Mat4.identity();
-
-            model_transform = model_transform.times(Mat4.scale(1,4,1));
-
-            model_transform = this.draw_obstacles(graphics_state,t);
-            //let targ_transform=Mat4.identity();
-            //targ_transform=targ_transform.times(Mat4.translation([-12, 7, -20]));
-            //this.shapes.target.draw(graphics_state, targ_transform, this.materials.target);
+            this.draw_obstacles(graphics_state,t);
 
         }
-
     }
