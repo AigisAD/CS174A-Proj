@@ -126,7 +126,6 @@ class Camera_Movement extends Scene_Component
             lookVector = lookVector.times(this.walkSpeed);
             this.camVector = this.camVector.minus(lookVector);
 
-            // HANDLE COLLISION TEMPORARILY HERE
             const mapBound = 180;
             this.camVector[1] = -this.height;
             if (this.camVector[0] > mapBound)
@@ -137,6 +136,8 @@ class Camera_Movement extends Scene_Component
                 this.camVector[2] = mapBound;
             if (this.camVector[2] < -mapBound)
                 this.camVector[2] = -mapBound;
+
+
         }
 
         updateCameraView(){

@@ -41,6 +41,14 @@ class Aiming_Manager extends Scene_Component
             this.live_bullets = [];
             document.addEventListener("mousedown", this.shoot);
 
+            this.music = new Audio("assets/hitmarker.mp3");
+            this.music.loop = false;
+            this.music.volume = 0.2;
+
+            this.music2 = new Audio("assets/laser.mp3");
+            this.music2.loop = false;
+            this.music2.speed = 1.5;
+            this.music2.volume = 0.2;
          
         }
         
@@ -55,10 +63,11 @@ class Aiming_Manager extends Scene_Component
                 let target_pos = Vec.of(target.coordinates["x"], target.coordinates["y"], target.coordinates["z"]);
                 var diff = target_pos.minus(bullet_pos);
                 var distance = Math.sqrt(diff[0]*diff[0] + diff[1]*diff[1] + diff[2]*diff[2]);
-                if (distance <= this.bullet_size + 1){
+                if (distance <= this.bullet_size + 3){
                     console.log("he;")
                     this.context.globals.totalHits++;
                     this.live_bullets.shift();
+                    this.music.play();
 
                 }else{
                     new_array.push(target);
@@ -78,6 +87,8 @@ class Aiming_Manager extends Scene_Component
             this.shapes.gun.draw(graphics_state,transform,this.materials.phong);
         }
         shoot(graphics_state) {
+
+
         
             console.log("shoot");
             this.context.globals.totalShots++;
@@ -96,6 +107,7 @@ class Aiming_Manager extends Scene_Component
             let bulletTransform = Mat4.identity().times(translationMatrix).times(Mat4.scale([this.bullet_size, this.bullet_size, this.bullet_size]));
             let bullet = new Bullet(bulletTransform, viewVector, this.context.globals.graphics_state.animation_time/1000);
             this.live_bullets.push(bullet);
+            this.music2.play();
 
         }
         updateBulletPos(graphics_state){

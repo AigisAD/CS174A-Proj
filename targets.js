@@ -107,6 +107,8 @@ class Target_Manager extends Scene_Component {
         this.targetsRem = document.getElementById("targetsLeft");
         this.accuracy.textContent="";
         this.difficulty=0;
+
+
     }
     make_control_panel() {
         this.key_triggered_button( "Regenerate Targets",[ "x" ], () =>  this.gen());
@@ -181,8 +183,19 @@ class Target_Manager extends Scene_Component {
     }
     display(graphics_state){
         const t = graphics_state.animation_time / 1000;
-        this.accuracy.textContent=String(this.globals.totalHits)+"/"+String(this.globals.totalShots);
-        this.RoundScore=10*this.globals.totalHits;
+
+        var totalHits = this.globals.totalHits;
+        var totalShots = this.globals.totalShots
+        var total = totalHits/totalShots;
+        var totalM = (totalShots - totalHits);
+
+        this.accuracy.textContent=String(total);
+
+        this.RoundScore=100*this.globals.totalHits;
+        if (totalHits != totalShots){
+            this.RoundScore-=10*totalM;
+        }
+
         this.score.textContent=this.RoundScore;
         this.RoundTargetsLeft=this.RoundTargetsMax-this.globals.totalHits;
         this.targetsRem.textContent=String(this.RoundTargetsLeft);
