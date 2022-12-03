@@ -11,7 +11,7 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
                 context.register_scene_component(new Environment_Manager(context, control_box.parentElement.insertCell()));
 
             context.globals.graphics_state.camera_transform = Mat4.look_at(Vec.of(0, 25, 0), Vec.of(0, 25, 20), Vec.of(0, 1, 0));
-            this.context = context;
+
             // *** Mouse controls: ***
             this.mouse = { "from_center": Vec.of( 0,0 ) };                           // Measure mouse steering, for rotating the flyaround camera:
             const mouse_position = ( e, rect = context.canvas.getBoundingClientRect() ) =>
@@ -32,13 +32,14 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
             this.music = new Audio("assets/csgo.mp3");
             this.music.loop = true;
             this.music.volume = 0.1;
+            this.context = context;
 
 
             this.materials =
                 {
 
                     phong: context.get_instance(Phong_Shader).material(Color.of(50/255,50/255,50/255,1), {ambient: 1}),
-                    phong2: context.get_instance(Phong_Shader).material(Color.of(253/255,250/255,150/255,1), {ambient: 1,}),
+                    //phong2: context.get_instance(Phong_Shader).material(Color.of(253/255,250/255,150/255,1), {ambient: 1,}),
                     sky: context.get_instance(Phong_Shader).material(Color.of(0/255,0/255,255/255,1), {ambient: 1,}),
                     //sky2: context.get_instance(Phong_Shader).material(Color.of(0/255,0/255,200/255,1), {ambient: 1,}),
                     //sky3: context.get_instance(Phong_Shader).material(Color.of(0/255,50/255,200/255,1), {ambient: 1,}),
@@ -47,6 +48,10 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
                         { ambient: 1, texture: this.context.get_instance( "/assets/sky2.png" ) } ),
                     sky2: context.get_instance(Phong_Shader).material( Color.of( 0,0,0,1),
                         { ambient: 1, texture: this.context.get_instance( "/assets/sky2.png" ) } ),
+                    test: context.get_instance(Phong_Shader).material( Color.of( 0,0,0,1),
+                        { ambient: 1, texture: context.get_instance( "/assets/test2.jpg" ) } ),
+                    phong2: context.get_instance(Phong_Shader).material( Color.of( 0,0,0,1),
+                        { ambient: 1, texture: context.get_instance( "/assets/brickedup2.jpg" ) } ),
 
 
                 };
@@ -69,7 +74,7 @@ window.Term_Project_Scene = window.classes.Term_Project_Scene =
             // Drawing map
             var base_map = Mat4.identity().times(Mat4.scale([200, 1, 200]))
                 .times(Mat4.translation([0, -5, 0]));
-            this.shapes.box.draw(graphics_state, base_map, this.materials.phong);
+            this.shapes.box.draw(graphics_state, base_map, this.materials.test);
 
             var wall_1 = Mat4.identity().times(Mat4.translation([0, 20, -200]))
                 .times(Mat4.scale([200, 25, 1]));

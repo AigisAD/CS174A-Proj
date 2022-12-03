@@ -28,6 +28,8 @@ class Aiming_Manager extends Scene_Component
             this.submit_shapes(context, shapes);
             this.materials = {
                 red: context.get_instance(Phong_Shader).material(Color.of(1, 0, 0, 1), {ambient: 1}),
+                test: context.get_instance(Phong_Shader).material( Color.of( 0,0,0,1),
+                    { ambient: 1, texture: this.context.get_instance( "/assets/gunmetal.png" ) } ),
                 phong: context.get_instance(Phong_Shader).material(Color.of(0.0, 0.0, 0.0, 1), {ambient: 0.0}),
             };
             this.bullet_size = 1;
@@ -85,7 +87,7 @@ class Aiming_Manager extends Scene_Component
             //transform=
                 //.times(Mat4.scale(1,1,3))
 
-            this.shapes.gun.draw(graphics_state,transform,this.materials.phong);
+            this.shapes.gun.draw(graphics_state,transform,this.materials.test);
         }
         shoot(graphics_state) {
 
