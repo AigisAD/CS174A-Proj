@@ -147,6 +147,11 @@ class Target_Manager extends Scene_Component {
             this.context.globals.targets.push(targ);
         }
     }
+
+    change_difficulty(){
+
+    }
+
     draw_targets(graphics_state,t){
         for (let y=0;y<this.context.globals.targets.length;y++){
             if(!this.target_bitmap[y]){
@@ -167,9 +172,11 @@ class Target_Manager extends Scene_Component {
             }else{
                 let targ_transform=Mat4.identity();
                 if(this.difficulty==1) {
-                    this.context.globals.targets[y].coordinates.x += 0.5 * Math.sin(
+                    this.context.globals.targets[y].coordinates.x += 0.3 * Math.sin(
                         t * Math.PI * 2 / this.context.globals.targets[y].speed);
                 }
+
+
                 targ_transform=  targ_transform
                     //.times(Mat4.translation(10*Math.sin(t*Math.PI/5)-5,0,0))
                     .times(Mat4.translation([
@@ -194,10 +201,10 @@ class Target_Manager extends Scene_Component {
 
         var totalHits = this.globals.totalHits;
         var totalShots = this.globals.totalShots
-        var total = totalHits/totalShots;
+        var total = Math.round(totalHits*100/totalShots);
         var totalM = (totalShots - totalHits);
 
-        this.accuracy.textContent=String(total);
+        this.accuracy.textContent=String(total)+String("%");
 
         this.RoundScore=100*this.globals.totalHits;
         if (totalHits != totalShots){
@@ -223,4 +230,6 @@ class Target_Manager extends Scene_Component {
 
     }
 
+
 }
+
