@@ -146,8 +146,8 @@ class Camera_Movement extends Scene_Component
                     const zBound1 = -1*(this.context.globals.obstacles[y].coordinates.z + this.context.globals.obstacles[y].zSize )-2.5;
                     const zBound2 = -1*(this.context.globals.obstacles[y].coordinates.z - this.context.globals.obstacles[y].zSize )+2.5;
                     //console.log(this.context.globals.obstacles.length);
-                    console.log(xBound1,xBound2,zBound1,zBound2);
-                    console.log(this.camVector);
+                    //console.log(xBound1,xBound2,zBound1,zBound2);
+                    //console.log(this.camVector);
                     if (this.camVector[0] > xBound1 && this.camVector[0] < xBound2 && this.camVector[2] > zBound2 -1.3  && this.camVector[2] < zBound2+1.3   ) {
                         //console.log("a");
                         this.camVector[2] = zBound2+1;
